@@ -1,4 +1,4 @@
-name: fabrikam-web
+name: docker
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -18,7 +18,7 @@ on:
 env:
   # TODO: Creates container named ACCOUNT/REPO
   #       Append /IMAGE-NAME to create a container named ACCOUNT/REPO/IMAGE-NAME
-  IMAGE_NAME: fabrikam-web
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
  
@@ -37,14 +37,12 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Build image
-        working-directory: ./content-web
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
 
       - name: Log into Github Container Registry
         run: echo "${{ secrets.CR_PAT }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin 
 
       - name: Push image into container registry
-        working-directory: ./content-web
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
           
